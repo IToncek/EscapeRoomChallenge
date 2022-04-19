@@ -1,0 +1,11 @@
+name: Fem3xEscapeRoom
+version: '${project.version}'
+main: me.itoncek.fem3xescaperoom.Fem3xEscapeRoom
+api-version: 1.18
+prefix: EscapeRoom Driver
+load: POSTWORLD
+authors: [ IToncek ]
+description: If you beat this, I'll surely give you 1000kč!
+website: https://plugins.itoncek.cf
+commands:
+  start:
