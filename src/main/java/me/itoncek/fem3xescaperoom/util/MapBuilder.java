@@ -1,19 +1,20 @@
 package me.itoncek.fem3xescaperoom.util;
 
 import me.itoncek.fem3xescaperoom.Fem3xEscapeRoom;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Rotatable;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapBuilder {
 
@@ -70,8 +71,42 @@ public class MapBuilder {
         setBlock(new Location(world, 58, -56, 8), Material.REDSTONE_BLOCK);
     }
 
-    public static void stage3(){
-        String data = download()
+
+    public static int j = 0;
+
+    public static void stage3(World world){
+        String data = download("https://raw.githubusercontent.com/IToncek/EscapeRoomChallenge/website/files/stage3.csv");
+        Map<Location, Map.Entry<Material, BlockData>> cache = new HashMap<>();
+        Map<Integer, Map.Entry<Location, Map.Entry<Material, BlockData>>> datas = new HashMap<>();
+        for(String s : data.split("\\r?\\n")) {
+            String[] subdata = s.split("\\r?,");
+            String type = subdata[0];
+            Material material = Material.getMaterial(type);
+            Location location = new Location(world, Double.parseDouble(subdata[1]), Double.parseDouble(subdata[2]), Double.parseDouble(subdata[3]));
+            BlockData blockData = Bukkit.createBlockData(subdata[4]);
+            assert material != null;
+            cache.put(location, Map.entry(material,blockData));
+        }
+        int i = 0;
+        for(Map.Entry<Location, Map.Entry<Material, BlockData>> entry : cache.entrySet()) {
+            datas.put(i, entry);
+            i++;
+        }
+        cache.clear();
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if(datas.containsKey(j)) {
+                    Map.Entry<Location, Map.Entry<Material, BlockData>> entry = datas.get(j);
+                    entry.getKey().getBlock().setType(entry.getValue().getKey());
+                    entry.getKey().getBlock().setBlockData(entry.getValue().getValue());
+                    j++;
+                } else {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(Fem3xEscapeRoom.getProvidingPlugin(Fem3xEscapeRoom.class), 0, 0);
     }
 
     public static String download(String url){
@@ -115,5 +150,5 @@ public class MapBuilder {
         sign.setGlowingText(true);
         sign.setColor(DyeColor.RED);
         sign.update();
-    };
+    }
 }

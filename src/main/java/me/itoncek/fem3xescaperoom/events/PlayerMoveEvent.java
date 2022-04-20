@@ -53,6 +53,8 @@ public class PlayerMoveEvent implements Listener {
                     }
                 }
                 break;
+            case 2:
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + Fem3xEscapeRoom.stage);
         }
