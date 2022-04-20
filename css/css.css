@@ -46,7 +46,7 @@ hr.content-divider {
 }
 
 #header {
-    background: url(./img/header.png);
+    background: url(./img/header.jpg);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -54,7 +54,7 @@ hr.content-divider {
 }
 
 #parallax-1 {
-    background: url(./img/1.png);
+    background: url(./img/1.jpg);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -67,7 +67,7 @@ hr.content-divider {
 }
 
 #parallax-2 {
-    background: url(img/2.png);
+    background: url(img/2.jpg);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
