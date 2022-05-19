@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static me.itoncek.fem3xescaperoom.util.MapBuilder.stage3;
 
-public class yesCommand implements CommandExecutor {
+public class goCommand implements CommandExecutor {
     public static Fem3xEscapeRoom plugin;
 
-    public yesCommand(Fem3xEscapeRoom pl) {
+    public goCommand(Fem3xEscapeRoom pl) {
         plugin = pl;
     }
 
@@ -24,7 +24,7 @@ public class yesCommand implements CommandExecutor {
             stage3(((Player) sender).getWorld());
             return true;
         } else {
-            sender.sendMessage(ChatColor.DARK_RED +"You can't use that now!");
+            sender.sendMessage(ChatColor.DARK_RED +"You can't use that now! Current stage is: " + Fem3xEscapeRoom.stage);
             return false;
         }
     }

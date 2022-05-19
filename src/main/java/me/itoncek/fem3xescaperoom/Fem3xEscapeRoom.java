@@ -1,7 +1,7 @@
 package me.itoncek.fem3xescaperoom;
 
 import me.itoncek.fem3xescaperoom.commands.StartCommand;
-import me.itoncek.fem3xescaperoom.commands.yesCommand;
+import me.itoncek.fem3xescaperoom.commands.goCommand;
 import me.itoncek.fem3xescaperoom.events.PlayerClickEvent;
 import me.itoncek.fem3xescaperoom.events.PlayerEatEvent;
 import me.itoncek.fem3xescaperoom.events.PlayerMoveEvent;
@@ -66,7 +66,7 @@ public final class Fem3xEscapeRoom extends JavaPlugin {
         log.info("Registering start command...");
         Objects.requireNonNull(plugin.getCommand("start")).setExecutor(new StartCommand(plugin));
         log.info("Registering yes command...");
-        Objects.requireNonNull(plugin.getCommand("yes")).setExecutor(new yesCommand(plugin));
+        Objects.requireNonNull(plugin.getCommand("go")).setExecutor(new goCommand(plugin));
     }
 
     @Override

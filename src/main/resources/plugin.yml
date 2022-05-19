@@ -9,4 +9,6 @@ description: If you beat this, I'll surely give you 1000kč!
 website: https://plugins.itoncek.cf
 commands:
   start:
-  yes:
+    description: "start plugin"
+  go:
+    description: "accept"
