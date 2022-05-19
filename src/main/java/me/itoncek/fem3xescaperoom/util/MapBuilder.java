@@ -6,7 +6,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Rotatable;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -76,48 +75,44 @@ public class MapBuilder {
 
     public static void stage3(World world){
         String data = download("https://raw.githubusercontent.com/IToncek/EscapeRoomChallenge/website/files/stage3.csv");
+        //Bukkit.getLogger().info(data);
         Map<Location, Map.Entry<Material, BlockData>> cache = new HashMap<>();
         Map<Integer, Map.Entry<Location, Map.Entry<Material, BlockData>>> datas = new HashMap<>();
         for(String s : data.split("\\r?\\n")) {
-            String[] subdata = s.split("\\r?,");
+            String[] subdata = s.split("\\r?;");
             String type = subdata[0];
-            Material material = Material.getMaterial(type);
+            //Bukkit.getLogger().info("Material in: "+subdata[0]);
+            Material material = Material.matchMaterial(type.substring(10));
+            //Bukkit.getLogger().info("Material out: " + material.getKey());
             Location location = new Location(world, Double.parseDouble(subdata[1]), Double.parseDouble(subdata[2]), Double.parseDouble(subdata[3]));
+            //Bukkit.getLogger().info("Location: "+location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
             BlockData blockData = Bukkit.createBlockData(subdata[4]);
+            //Bukkit.getLogger().info("Blockdata: "+blockData.getAsString(true));
             assert material != null;
             cache.put(location, Map.entry(material,blockData));
         }
         int i = 0;
         for(Map.Entry<Location, Map.Entry<Material, BlockData>> entry : cache.entrySet()) {
-            datas.put(i, entry);
+            entry.getKey().getBlock().setType(entry.getValue().getKey());
+            entry.getKey().getBlock().setBlockData(entry.getValue().getValue());
             i++;
         }
         cache.clear();
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if(datas.containsKey(j)) {
-                    Map.Entry<Location, Map.Entry<Material, BlockData>> entry = datas.get(j);
-                    entry.getKey().getBlock().setType(entry.getValue().getKey());
-                    entry.getKey().getBlock().setBlockData(entry.getValue().getValue());
-                    j++;
-                } else {
-                    cancel();
-                }
-            }
-        }.runTaskTimer(Fem3xEscapeRoom.getProvidingPlugin(Fem3xEscapeRoom.class), 0, 0);
     }
 
     public static String download(String url){
+        var ref = new Object() {
+            String sb = "";
+        };
         try {
             URL conn = new URL(url);
             URLConnection urlcon = conn.openConnection();
             BufferedReader out = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
-            return out.readLine();
+            out.lines().forEach(s -> ref.sb = ref.sb + s + "\n");
         } catch (IOException e) {
-            return e.getMessage();
+            ref.sb += e.getMessage();
         }
+        return ref.sb;
     }
 
     public static void fill(Location from, Location to, Material mat) {
